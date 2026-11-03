@@ -9,3 +9,5 @@ authlib
 httpx
 python-dotenv
 email-validator
+google-auth
+requests
