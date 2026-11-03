@@ -1,4 +1,4 @@
-import React,{ useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   ArrowDownUp, ArrowRight, Check, ChevronDown, Heart,
   Leaf, Search, ShoppingBag, SlidersHorizontal, Sparkles,
@@ -15,11 +15,6 @@ import {
   fetchFavorites,
   addFavorite,
   removeFavorite,
-  fetchShoppingList,
-  addShoppingItem,
-  updateShoppingItem,
-  deleteShoppingItem,
-  type ShoppingItem,
   type User,
 } from "./api";
 
@@ -188,16 +183,16 @@ console.log("Error:", error);
         (!query || text.includes(query)) &&
         (category === 'All groceries' || p.category === category) &&
         (p.price === null || p.price <= maxPrice) &&
-        p.protein >= minProtein &&
-        p.sugar <= maxSugar &&
+        (p.protein ?? 0) >= minProtein &&
+        (p.sugar ?? Infinity) <= maxSugar &&
         (!diet || p.diet.includes(diet)) &&
         include.every((i) => p.ingredients.includes(i)) &&
         !exclude.some((i) => p.ingredients.includes(i))
       )
     }).sort((a, b) => {
-      if (sort === 'price-low') return a.price - b.price
-      if (sort === 'price-high') return b.price - a.price
-      if (sort === 'protein') return b.protein - a.protein
+      if (sort === 'price-low') return (a.price ?? Infinity) - (b.price ?? Infinity)
+      if (sort === 'price-high') return (b.price ?? -Infinity) - (a.price ?? -Infinity)
+      if (sort === 'protein') return (b.protein ?? 0) - (a.protein ?? 0)
       return a.id.localeCompare(b.id)
     })
   }, [search, category, include, exclude, diet, maxPrice, minProtein, maxSugar, sort])
@@ -271,7 +266,7 @@ console.log("Error:", error);
     );
   }
 
-  if (showProfile) {
+  if (showProfile && user) {
     return (
       <Profile
         user={user}
