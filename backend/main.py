@@ -37,9 +37,7 @@ app = FastAPI(
     version="0.2.0",
 )
 
-app.add_middleware(
-    CORSMiddleware,
-   allowed_origins = [
+allowed_origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
@@ -55,7 +53,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-))
+)
 
 # Simple in-memory cache: 30 minutes
 CACHE = {}
